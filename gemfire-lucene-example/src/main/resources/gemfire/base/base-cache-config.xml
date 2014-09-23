@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:gfe="http://www.springframework.org/schema/gemfire" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:c="http://www.springframework.org/schema/c" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+		http://www.springframework.org/schema/gemfire http://www.springframework.org/schema/gemfire/spring-gemfire.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<context:property-placeholder location="classpath:site.properties" />
+
+	<!-- Set up cache -->
+	<util:properties id="gemfire-props" location="classpath:gemfire.properties">
+		<!-- <prop key="locators">${locators}</prop> -->
+	</util:properties>
+
+	<!-- 
+	<bean id="pdxAutoSerializer" class="com.gemstone.gemfire.pdx.ReflectionBasedAutoSerializer"
+		c:checkPortability="true" c:patterns="com.vmware.gemfire.demo.domain.*#identity=id.*">
+	</bean>
+	
+	 <bean id="pdxAutoSerializer" class="org.springframework.data.gemfire.mapping.MappingPdxSerializer">
+    <constructor-arg name="mappingContext">
+      <bean class="org.springframework.data.gemfire.mapping.GemfireMappingContext"/>
+    </constructor-arg>
+    <constructor-arg name="conversionService">
+      <bean class="org.springframework.core.convert.support.DefaultConversionService"/>
+    </constructor-arg>
+  </bean>
+
+	<gfe:disk-store id="pdxmetaStore" >
+		<gfe:disk-dir location="${pdx.diskstore.path}" />
+	</gfe:disk-store>
+
+   -->
+
+	<gfe:cache properties-ref="gemfire-props"/>
+	<gfe:cache-server port="0"/>
+
+</beans>

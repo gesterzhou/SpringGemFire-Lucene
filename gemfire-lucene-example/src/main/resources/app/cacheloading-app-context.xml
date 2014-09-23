@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+	<!-- Spring GemFire configurations (THIS NEEDS TO BE AT THE TOP OTHERWISE THE CACHE IN NOT INITIALISED) -->
+	<import resource="classpath:/client-cache-config.xml" />
+	
+	
+	<!-- Spring Batch configurations -->
+	<import resource="classpath:/batch-job-context.xml" />
+	<import resource="classpath:/batch-infrastructure-context.xml" />
+
+	<context:component-scan base-package="com.vmware.example.lucene" />
+	
+	<util:properties id="batchResources">
+        <prop key="instrument.file.name">classpath:/NASDAQ.txt</prop>
+        <prop key="price.file.name">classpath:/NASDAQ_20121005.txt</prop>
+    </util:properties>
+    
+	
+	<bean id="instrumentReader" class="org.springframework.batch.item.file.FlatFileItemReader"
+		scope="step">
+		<property name="resource" value="#{jobParameters['instrument.file.name']}" />
+		<property name="linesToSkip" value="0" />
+		<property name="lineMapper">
+			<bean class="com.vmware.example.lucene.loader.InstrumentLineMapper"/>
+		</property>
+	</bean>
+
+	<bean id="instrumentWriter" class="com.vmware.example.lucene.loader.InstrumentWriter" />
+	
+	<bean id="instrumentPriceReader" class="org.springframework.batch.item.file.FlatFileItemReader"
+		scope="step">
+		<property name="resource" value="#{jobParameters['price.file.name']}" />
+		<property name="linesToSkip" value="0" />
+		<property name="lineMapper">
+			<bean class="com.vmware.example.lucene.loader.InstrumentPriceLineMapper"/>
+		</property>
+	</bean>
+
+	<bean id="instrumentPriceWriter" class="com.vmware.example.lucene.loader.InstrumentPriceWriter" />
+	
+</beans>

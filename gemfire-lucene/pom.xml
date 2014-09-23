@@ -1,0 +1,168 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	 
+	<artifactId>sgf-lucene</artifactId>
+	<name>sgf-lucene</name>
+	<groupId>com.vmware</groupId>
+	<version>0.0.1-SNAPSHOT</version>
+	<description>Lucene indexing service for local cache nodes.</description>
+
+	<properties>
+		<maven.test.failure.ignore>true</maven.test.failure.ignore>
+		<spring.framework.version>3.1.2.RELEASE</spring.framework.version>
+		<spring.sgf.version>1.2.2.RELEASE</spring.sgf.version> 
+		<spring.gemfire.version>7.0.1</spring.gemfire.version>
+		<spring.batch.version>2.1.8.RELEASE</spring.batch.version>
+		<maven.test.failure.ignore>true</maven.test.failure.ignore>
+	</properties>
+	
+	<dependencies>
+
+		<dependency>
+			<groupId>com.vmware</groupId>
+			<artifactId>sgf-utils</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		 
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-core</artifactId>
+			<version>4.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-analyzers-common</artifactId>
+			<version>4.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-queryparser</artifactId>
+			<version>4.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.framework.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.gemstone.gemfire</groupId>
+			<artifactId>gemfire</artifactId>
+			<version>${spring.gemfire.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-gemfire</artifactId>
+			<version>${spring.sgf.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>3.0.0.RELEASE</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.7</version>
+		</dependency>
+
+	</dependencies>
+	
+	
+	<repositories>
+		<repository>
+			<id>spring-maven-milestone</id>
+			<name>Springframework Maven Repository</name>
+			<url>http://maven.springframework.org/milestone</url>
+		</repository>
+
+		<repository>
+			<id>spring-maven-release</id>
+			<name>Springframework Maven Repository</name>
+			<url>http://maven.springframework.org/release</url>
+		</repository>
+
+		<repository>
+			<id>libs-snapshot</id>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<name>Springframework Maven SNAPSHOT Repository</name>
+			<url>https://repo.springsource.org/libs-snapshot</url>
+		</repository>
+
+		<repository>
+			<id>gemstone-release-cache</id>
+			<name>GemStone Release Repository</name>
+			<url>http://dist.gemstone.com/maven/release</url>
+		</repository>
+	</repositories>
+
+
+	<build>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.1</version>
+				<configuration>
+					<mainClass>org.springframework.batch.core.launch.support.CommandLineJobRunner</mainClass>
+					<arguments>
+						<!-- job configuration file -->
+						<argument>classpath:/launch-context.xml</argument>
+						<!-- job name -->
+						<argument>job1</argument>
+					</arguments>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<index>true</index>
+						<manifest>
+							<mainClass>org.springframework.batch.core.launch.support.CommandLineJobRunner</mainClass>
+							<addClasspath>true</addClasspath>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.3</version>
+				<configuration>
+					<descriptors>
+						<descriptor>src/assemble/default-assembly.xml</descriptor>
+					</descriptors>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+</project>
